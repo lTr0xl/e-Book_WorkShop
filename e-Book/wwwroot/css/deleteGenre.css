@@ -1,0 +1,9 @@
+﻿html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+}
+.list-group-item {
+    font-size: 1.2em;
+    letter-spacing: -1px;
+}

@@ -1,0 +1,37 @@
+﻿@model Author
+
+@{
+    ViewData["Title"] = "Delete author";
+}
+
+<h3>Do you want to delete this author?</h3>
+
+<form method="post" asp-action="DeleteAuthor">
+    <div class="form-group">
+        <label asp-for="FirstName">First name</label>
+        <input asp-for="FirstName" class="form-control" placeholder="First name" disabled>
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName">Last name</label>
+        <input asp-for="LastName" class="form-control" placeholder="Last name" disabled/>
+    </div>
+    <div class="form-group">
+        <label asp-for="BirthDate">Birth date</label>
+        <input type="date" asp-for="BirthDate" class="form-control" placeholder="BirthDate" disabled/>
+    </div>
+    <div class="form-group">
+        <label asp-for="Nationality"></label>
+        <input asp-for="Nationality" class="form-control" placeholder="Nationality" disabled/>
+    </div>
+    <div class="form-group">
+        <label asp-for="Gender"></label>
+        <br />
+        <input  type="radio" asp-for="Gender" value="Male" disabled/>
+        <label asp-for="Gender">Male</label>
+        <input type="radio" asp-for="Gender" value="Female" disabled/>
+        <label asp-for="Gender">Female</label>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-controller="Authors" asp-action="Index" type="button" class="btn btn-secondary">Back</a>
+</form>

@@ -1,0 +1,69 @@
+﻿@using e_Book.ViewModels
+@model AddBookViewModel
+
+
+@{
+    ViewData["Title"] = "Add Book";
+}
+<h3>Add Book</h3>
+
+<form method="post" asp-action="AddBook" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" placeholder="Title">
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="YearPublished">Year Published</label>
+        <input asp-for="YearPublished" class="form-control" placeholder="Year Published">
+        <span asp-validation-for="YearPublished" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NumPages">Number of pages</label>
+        <input asp-for="NumPages" class="form-control" placeholder="Number of pages">
+        <span asp-validation-for="NumPages" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control" placeholder="Description">
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Publisher"></label>
+        <input asp-for="Publisher" class="form-control" placeholder="Publisher">
+        <span asp-validation-for="Publisher" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="AuthorId">Chose author</label>
+        <select asp-for="AuthorId" class="form-control">
+            <option selected="selected">--Select--</option>
+            @foreach(var author in Model.Authors)
+            {
+                <option value="@author.Id">@author.FirstName @author.LastName</option>
+            }
+        </select>
+        <span asp-validation-for="AuthorId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="GenreIds">Genres:</label>
+        <select asp-for="GenreIds" class="form-control">
+            @foreach (var genre in Model.Genres)
+            {
+                <option value="@genre.Id">@genre.GenreName</option>
+            }
+        </select>
+        <span asp-validation-for="GenreIds" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DownloadUrl"></label>
+        <input asp-for="DownloadUrl" class="form-control" placeholder="DownloadUrl">
+        <span asp-validation-for="DownloadUrl" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FrontPage"></label>
+        <input asp-for="FrontPage" type="file" class="form-control" placeholder="FrontPage">
+        <span asp-validation-for="FrontPage" class="text-danger"></span>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

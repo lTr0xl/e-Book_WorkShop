@@ -1,0 +1,126 @@
+﻿@model Book
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+@section css{
+    <link rel="stylesheet" href="~/css/review.css" />
+
+}
+ 
+<!-- Page Content -->
+<div class="container">
+    
+
+    <!-- Portfolio Item Heading -->
+    <h1 class="my-4">
+        @Model.Title
+    </h1>
+
+    <!-- Portfolio Item Row -->
+    <div class="row">
+
+        <div class="col-sm">
+            <img class="rounded border border-dark float-left" width="350px" height="450px" src="@Model.FrontPage" alt="">
+        </div>
+
+        <div class="col-sm" style="width:20rem">
+            <h3 class="my-3">Book Description</h3>
+            @if(Model.Description == null)
+            {
+                <h5>No description!</h5>
+            }
+            <p>@Model.Description</p>
+            <h3 class="my-3">Book Details</h3>
+            <ul>
+                <li><b>Year published: </b>@Model.YearPublished</li>
+                <li><b>Num pages: </b>@Model.NumPages</li>
+                <li><b>Publisher: </b>@Model.Publisher</li>
+                <li><b>Author: </b>@Model.Author.FirstName @Model.Author.LastName</li>
+                <li><b>Genres: </b>
+                    @{
+                        var numGenres = Model.BookGenres.Count();
+                        var genresNum = 0;
+                    }
+                    @foreach (var bg in Model.BookGenres)
+                    {
+                        genresNum++;
+                        if (genresNum != numGenres)
+                        {
+                            <span>@bg.Genre.GenreName, </span>
+                        }
+                        else
+                        {
+                            <span>@bg.Genre.GenreName </span>
+                        }
+                    }
+                </li>
+                @{
+                    int suma = 0;
+                    int br = 0;
+                    var rating = "/";
+                    @foreach (var r in Model.Reviews)
+                    {
+                        suma += r.Rating.GetValueOrDefault();
+                        br++;
+                    }
+                    if (br !=0)
+                    {
+                        rating = (suma / br).ToString();
+                    }
+                }
+                <li><b>Rating: </b>@rating</li>
+            </ul>
+            <br />
+            @if (Model.DownloadUrl != null)
+            {
+                <h4>Download link: </h4>
+                <span>@Model.DownloadUrl</span>
+            }
+        </div>
+        <div class="col-sm" >
+            <a asp-controller="Book" asp-action="EditBook" asp-route-id="@Model.Id" type="button" class="btn btn-secondary" style="margin-left:12rem;margin-top:-5rem">Edit Book</a>
+            <a asp-controller="Book" asp-action="DeleteBook" asp-route-id="@Model.Id" type="button" class="btn btn-danger" style="margin-left:18rem;margin-top:-8rem">Delete Book</a>
+        </div>
+    </div>
+    
+    <br />
+    <hr />
+    
+    <!-- Reviews -->
+    <div class="main-container">
+        <div>
+            <h1 class="text-center">Reviews</h1>
+            <a asp-controller="Review" asp-action="CreateReview" asp-route-id="@Model.Id" type="button" class="btn btn-primary position-absolute" style="margin-left:65rem; margin-top:-2.5rem">Create Review</a>
+        </div>
+        <hr />
+        <div class="cards">
+            @foreach (var review in Model.Reviews)
+            {
+            <div class="card">
+                    <h4>@review.AppUser</h4>
+                    <div>
+                        <ul>
+                            @for (var i = 0; i < review.Rating; i++)
+                            {
+                                <li><i class="fa-solid fa-star"></i></li>
+                            }
+                        </ul>
+                    </div>
+                    
+                <p class="close"><i class="fa-solid fa-xmark"></i></p>
+                <p class="desc">@review.Comment</p>
+                <p class="read-more">
+                    <a asp-controller="Review" asp-action="EditReview" asp-route-id="@review.Id" type="button" class="btn btn-dark">Edit</a>
+                    <a asp-controller="Review" asp-action="DeleteReview" asp-route-id="@review.Id" type="button" class="btn btn-danger">Delete</a>
+                </p>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- /.container -->

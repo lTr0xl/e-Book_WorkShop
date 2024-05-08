@@ -1,0 +1,67 @@
+﻿@using e_Book.ViewModels
+@model AuthorsViewModel
+@{
+    ViewData["Title"] = "Authors";
+}
+@section css{
+    <link rel="stylesheet" href="~/css/authors.css" />
+}
+
+<form asp-controller="Authors" asp-action="Index" method="get">
+    <div class="row">
+
+        <div class="col-2">
+    <div class="form-group">
+        <label asp-for="@Model.SearchByName">Search author: </label>
+        <input asp-for="@Model.SearchByName" placeholder="Search.." />
+    </div>
+    </div>
+
+    <div class="col-1" style="margin-left:-3.9rem; margin-top:1.2rem">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+        <div class="col-1" style="margin-left:-3.1rem; margin-top:1.2rem">
+        <a asp-controller="Authors" asp-action="Index" class="btn btn-secondary">Clear</a>
+    </div>
+    </div>
+
+</form>
+<a asp-controller="Authors" asp-action="CreateAuthor" type="button" class="btn btn-primary" style = "margin-left:80rem; margin-bottom:-2.5rem">Create author</a>
+<div class="main-wrapper" style="margin-top:-2rem">
+    <div class="container main-container">
+        @foreach(var author in Model.Authors)
+        {
+            <div class="row main-row">
+                <div class="col-10 align-center">
+                    <div class="row p-3">
+                        <div class="name col-4 align-middle">
+                            <a asp-controller="Book" asp-action="SearchByAuthorId" asp-route-id="@author.Id" style="text-decoration:none; color:black" onmouseover="this.style.color='gray'" onmouseout="this.style.color='black'"><h5>@author.FirstName @author.LastName</h5></a>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-check-inline">
+                                <p>@author.Nationality</p>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-check-inline">
+                                @author.BirthDate
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            @{
+                                var numBooks = author.Books.Count();
+                            }
+                          <a asp-controller="Book" asp-action="SearchByAuthorId" asp-route-id="@author.Id" type="button" class="btn btn-link btn-block" style="margin-left: -1rem"><h6>Books(@numBooks)</h6></a>
+                        </div>
+                        <div class="col-1">
+                            <a asp-controller="Authors" asp-action="EditAuthor" asp-route-id="@author.Id" type="button" class="btn btn-secondary btn-block" style="margin-left: 15.5rem">Edit</a>
+                        </div>
+                        <div class="col-1">
+                            <a asp-controller="Authors" asp-action="DeleteAuthor" asp-route-id="@author.Id" type="button" class="btn btn-danger btn-block" style="margin-left: 13.5rem">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

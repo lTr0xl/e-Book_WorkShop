@@ -1,0 +1,115 @@
+﻿@using e_Book.ViewModels
+@model IEnumerable<Book>
+
+@{
+    ViewData["Title"] = "Books";
+}
+@section css {
+    <link rel="stylesheet" href="~/css/book.css" />
+}
+
+@if (Model.Count() == 0)
+{
+    <h1>This author doesn't have books yet!</h1>
+    <a asp-controller="Authors" asp-action="Index" type="button" class="btn btn-primary">Go back</a>
+}
+else
+{
+    <h1>@Model.FirstOrDefault().Author.FirstName @Model.FirstOrDefault().Author.LastName: </h1>
+    <br />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <div class="container row" style="margin-left:2rem">
+        @foreach (var book in Model)
+        {
+            <div class="col-xs-12 col-md-6 bootstrap snippets bootdeys">
+                <!-- product -->
+                <div class="product-content product-wrap clearfix">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-8 col-xs-10">
+                            <div class="product-image">
+                                <img src="@book.FrontPage" width="192px" height="235px" alt="194x22" class="img-responsive">
+                            </div>
+                        </div>
+                        <div class="col-md-7 col-sm-12 col-xs-12">
+                            <div class="product-deatil">
+                                <h5 class="name">
+                                    <a style="pointer-events:none">
+                                        <b>@book.Title</b>
+                                        <p>
+                                            @{
+                                                var numGenres = book.BookGenres.Count();
+                                                var i = 0;
+                                            }
+                                            @foreach (var bg in book.BookGenres)
+                                            {
+                                                i++;
+                                                if (i != numGenres)
+                                                {
+                                                    <span>
+                                                        <a asp-controller="Book" asp-action="SearchByGenreId" asp-route-id="@bg.GenreId" style="font-size:13px;color: #9aa7af;">
+                                                            @bg.Genre.GenreName,
+                                                        </a>
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span>
+                                                        <a asp-controller="Book" asp-action="SearchByGenreId" asp-route-id="@bg.GenreId" style="font-size:13px;color: #9aa7af;">
+                                                            @bg.Genre.GenreName
+                                                        </a>
+                                                    </span>
+                                                }
+                                            }
+                                        </p>
+                                    </a>
+                                </h5>
+                                <a asp-controller="Book" asp-action="SearchByAuthorId" asp-route-id="@book.AuthorId" style="color:black;font-size: 13px; font-weight:bold; text-decoration:none">
+                                    Author: @book.Author.FirstName @book.Author.LastName
+                                </a>
+                                <p>Year Published: @book.YearPublished</p>
+
+                            </div>
+                            <span class="tag1"></span>
+                            <div class="product-info smart-form" style="margin-top:2rem">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-xs-6">
+                                        <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id" class="btn btn-success">View details</a>
+                                    </div>
+                                    @{
+                                        int suma = 0;
+                                        int br = 0;
+                                        int rating = 0;
+                                        @foreach (var r in book.Reviews)
+                                        {
+                                            suma += r.Rating.GetValueOrDefault();
+                                            br++;
+                                        }
+                                        if (br != 0) rating = (suma / br);
+                                    }
+                                    <div class="col-md-6 col-sm-6 col-xs-6">
+                                        <div class="rating">
+                                            @for (int ii = 5; ii > 0; ii--)
+                                            {
+                                                if (ii > rating)
+                                                {
+                                                    <label><i class="fa fa-star"></i></label>
+                                                }
+                                                else
+                                                {
+                                                    <label><i class="fa fa-star text-primary"></i></label>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end product -->
+            </div>
+        }
+    </div>
+
+
+}

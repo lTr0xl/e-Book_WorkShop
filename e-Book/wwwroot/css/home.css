@@ -1,0 +1,101 @@
+﻿.button {
+    margin: auto;
+    position: absolute;
+    top: 5rem;
+    left: 0;
+    bottom: 0;
+    right: 0;
+   
+}
+.navbar-brand {
+    margin: 0;
+    color: #ffffff;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    border-top: 8px solid #ffffff;
+    padding: 5px 32px 0px 32px;
+    line-height: 1.08333333;
+    height: auto;
+}
+
+    .navbar-brand:before {
+        position: absolute;
+        content: '';
+        left: -8px;
+        top: -8px;
+        width: 8px;
+        bottom: 12px;
+        background: #ffffff;
+    }
+
+    .navbar-brand:after {
+        position: absolute;
+        content: '';
+        right: -8px;
+        top: -8px;
+        width: 8px;
+        bottom: 12px;
+        background: #ffffff;
+    }
+    .navbar-brand a{
+        color:black;
+    }
+    .navbar-brand a:hover {
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+.navbar-header + h3 {
+    margin-top: 61px;
+}
+
+.navbar-header {
+    text-align: center;
+}
+
+.small-lines:before {
+    position: absolute;
+    content: '';
+    left: -40px;
+    height: 8px;
+    bottom: 12px;
+    width: 8%;
+    background: #ffffff;
+}
+
+.small-lines:after {
+    position: absolute;
+    content: '';
+    right: -40px;
+    height: 8px;
+    bottom: 12px;
+    width: 8%;
+    background: #ffffff;
+}
+
+.small-lines1:before {
+    width: 38%;
+    background: #009fb6;
+}
+
+.small-lines1:after {
+    width: 38%;
+    background: #009fb6;
+}
+
+.navbar-brand a {
+    font-size: 48px;
+}
+
+.container {
+    margin-top: 150px;
+}
+
+small {
+    line-height: 1.2;
+    font-size: 24px;
+    letter-spacing: 4.8px;
+    display: block;
+    position: relative;
+}

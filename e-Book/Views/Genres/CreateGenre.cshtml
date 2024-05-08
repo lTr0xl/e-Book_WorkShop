@@ -1,0 +1,17 @@
+﻿@model Genre
+@{
+    ViewData["Title"] = "Create genre";
+}
+@if(TempData["Error"] != null)
+{
+    <p class="text-danger">@TempData["Error"]</p>
+}
+<form method="post" asp-action="CreateGenre">
+    <div class="form-group">
+        <label asp-for="GenreName">Genre name</label>
+        <input asp-for="GenreName" class="form-control" placeholder="Genre name">
+        <span asp-validation-for="GenreName" class="text-danger"></span>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

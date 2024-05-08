@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = null;
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/home.css" />
+
+<html style="height: 100%;
+    margin: 0;">
+    <body style="height: 100%;
+        margin: 0;overflow: hidden">
+        <div style="background-image:url(https://www.barzgaran.at/wp-content/uploads/2020/08/102a-1024x548.jpg);
+            height: 100%;background-position: center;background-repeat: no-repeat;background-size: cover;">
+
+        <div class="row" style="margin-left:83.5rem;font-weight:500;color:white;">
+            <div class="col-1" style="margin-top:1rem;">
+                <a asp-controller="Authors" asp-action="Index" style="text-decoration:none;cursor:pointer;border-bottom:2px solid white;color:white">
+                    Authors</a>
+            </div>
+            <div class="col-1" style="margin-left:5rem;margin-top:1rem">
+                <a asp-controller="Genres" asp-action="Index" style="text-decoration:none;cursor:pointer;border-bottom:2px solid white;color:white">
+                    Genres</a>
+            </div>
+        </div>
+
+
+        <div class="container text-center button">
+            <div class="navbar-header">
+                <h1 class="navbar-brand ">
+                    <a asp-controller="Book" asp-action="index" style="text-decoration:none">
+                        SHOP NOW<br>
+                        <small class="small-lines">Online book store</small>
+                    </a>
+                </h1>
+            </div>
+        </div>
+
+
+
+        </div>
+    </body>
+</html>
