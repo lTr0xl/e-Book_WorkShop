@@ -5,64 +5,91 @@
     ViewData["Title"] = "Books";
 }
 
-
-
 @section css {
     <link rel="stylesheet" href="~/css/book.css" />
 }
+<div class="row" style="height:3rem;margin-bottom:2rem;border-bottom:1px solid gray">
 
-<div class="row">
-
-    <div class="col-6"style="width:20rem">
-<form asp-controller="Book" asp-action="Index" method="get">
-    <input asp-for="@Model.SearchByName" type="hidden" />
-    <label asp-for="@Model.AuthorSearchId">Chose author</label>
-    <select asp-for="@Model.AuthorSearchId" class="form-control">
-        <option selected="selected">--Select--</option>
-        @foreach (var author in Model.Authors)
-        {
-            <option value="@author.Id">@author.FirstName @author.LastName</option>
-        }
-    </select>
-
-
-    <label asp-for="@Model.GenreSearchId">Chose genre</label>
-    <select asp-for="@Model.GenreSearchId" class="form-control">
-        <option selected="selected">--Select--</option>
-        @foreach (var genre in Model.Genres)
-        {
-            <option value="@genre.Id">@genre.GenreName</option>
-        }
-    </select>
-    <button type="submit" class="btn btn-primary">Search</button>
-    <a asp-controller="Book" asp-action="Index" class="btn btn-secondary">Clear</a>
-</form>
-    </div>
-    <div class="col-5" >
-@* Serach By Title *@
-<form asp-controller="Book" asp-action="Index" method="get" style="width:20rem">
-    <div class="mainSearch">
-        <div class="input-group" style="width:20rem;margin-left:-8rem; margin-top:-2.1rem">
-            <input asp-for="@Model.SearchByName" type="text" class="form-control" placeholder="Search by title">
-            <div class="input-group-append">
-                <button class="btn btn-secondary" type="submit">
-                    <i class="fa fa-search"></i>
-                </button>
+    <div class="dropdown col-1" style="margin-left:4rem">
+        <button style="border:1px solid lightgray; width:6rem" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
+            Filter
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width:17rem;padding:1rem">
+            <div>
+                <form asp-controller="Book" asp-action="Index" method="get">
+                    <input asp-for="@Model.SearchByName" type="hidden" />
+                    <label asp-for="@Model.AuthorSearchId">Chose author</label>
+                    <select asp-for="@Model.AuthorSearchId" class="form-control">
+                        <option selected="selected">--Select--</option>
+                        @foreach (var author in Model.Authors)
+                        {
+                            <option value="@author.Id">@author.FirstName @author.LastName</option>
+                        }
+                    </select>
+                    <label asp-for="@Model.GenreSearchId">Chose genre</label>
+                    <select asp-for="@Model.GenreSearchId" class="form-control">
+                        <option selected="selected">--Select--</option>
+                        @foreach (var genre in Model.Genres)
+                        {
+                            <option value="@genre.Id">@genre.GenreName</option>
+                        }
+                    </select>
+                    <button type="submit" class="btn btn-primary" style="margin-top:.5rem">Search</button>
+                    <a asp-controller="Book" asp-action="Index" class="btn btn-secondary" style="margin-top:.5rem">Clear</a>
+                </form>
             </div>
         </div>
     </div>
-</form>
 
-    
+
+  @*   <div class="col-6" style="width:20rem">
+        <form asp-controller="Book" asp-action="Index" method="get">
+            <input asp-for="@Model.SearchByName" type="hidden" />
+            <label asp-for="@Model.AuthorSearchId">Chose genre</label>
+            <select asp-for="@Model.AuthorSearchId" class="form-control">
+                <option selected="selected">--Select--</option>
+                @foreach (var author in Model.Authors)
+                {
+                    <option value="@author.Id">@author.FirstName @author.LastName</option>
+                }
+            </select>
+            <label asp-for="@Model.GenreSearchId">Chose genre</label>
+            <select asp-for="@Model.GenreSearchId" class="form-control">
+                <option selected="selected">--Select--</option>
+                @foreach (var genre in Model.Genres)
+                {
+                    <option value="@genre.Id">@genre.GenreName</option>
+                }
+            </select>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a asp-controller="Book" asp-action="Index" class="btn btn-secondary">Clear</a>
+        </form>
+    </div> *@
+    <div class="col-5" style="margin-top:2.1rem;margin-left:7rem">
+        @* Serach By Title *@
+        <form asp-controller="Book" asp-action="Index" method="get" style="width:20rem">
+            <div class="mainSearch">
+                <div class="input-group" style="width:20rem;margin-left:-8rem; margin-top:-2.1rem">
+                    <input asp-for="@Model.SearchByName" type="text" class="form-control" placeholder="Search by title">
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="col-4" style="margin-left:3rem;margin-top:8rem">
-        <a asp-controller="Book" asp-action="AddBook" type="button" class="btn btn-primary" style="margin-left:22rem" >Create book</a>
+    <div class="col-4" style="margin-left: 2rem">
+        @if(User.Identity.IsAuthenticated && User.IsInRole("admin"))
+        {
+            <a asp-controller="Book" asp-action="AddBook" type="button" class="btn btn-primary" style="margin-left:22rem">Create book</a>
+        }
     </div>
 </div>
 
-
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<div class="container row" style="margin-left:2rem">
+<div class="container row" style="margin-left:1.5rem">
     @foreach (var book in Model.Books)
     {
         <div class="col-xs-12 col-md-6 bootstrap snippets bootdeys">
@@ -83,8 +110,8 @@
                                         <a asp-controller="Book" asp-action="SearchByAuthorId" asp-route-id="@book.AuthorId" style="font-size:13px;color: #9aa7af;text-decoration:none">
                                             by @book.Author.FirstName @book.Author.LastName
                                         </a>
-                                        
-                                        </p>
+
+                                    </p>
                                 </a>
                             </h5>
                             @{
@@ -113,7 +140,7 @@
                             }
                             <br />
                             <p>Year Published: @book.YearPublished</p>
-                            
+
                         </div>
                         <span class="tag1"></span>
                         <div class="product-info smart-form" style="margin-top:2rem">
@@ -156,3 +183,4 @@
         </div>
     }
 </div>
+

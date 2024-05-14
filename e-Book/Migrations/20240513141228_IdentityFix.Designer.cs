@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using e_Book.Data;
 
@@ -11,9 +12,11 @@ using e_Book.Data;
 namespace e_Book.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240513141228_IdentityFix")]
+    partial class IdentityFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -369,8 +372,6 @@ namespace e_Book.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUser");
-
                     b.HasIndex("BookId");
 
                     b.ToTable("Reviews");
@@ -497,19 +498,11 @@ namespace e_Book.Migrations
 
             modelBuilder.Entity("e_Book.Models.Review", b =>
                 {
-                    b.HasOne("e_Book.Models.AppUser", "AppUserInfo")
-                        .WithMany("Reviews")
-                        .HasForeignKey("AppUser")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("e_Book.Models.Book", "Book")
                         .WithMany("Reviews")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("AppUserInfo");
 
                     b.Navigation("Book");
                 });
@@ -533,8 +526,6 @@ namespace e_Book.Migrations
 
             modelBuilder.Entity("e_Book.Models.AppUser", b =>
                 {
-                    b.Navigation("Reviews");
-
                     b.Navigation("UserBooks");
                 });
 

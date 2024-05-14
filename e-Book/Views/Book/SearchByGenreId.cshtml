@@ -16,6 +16,9 @@
 else
 {
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    
+        <h2>Genre: @Model.FirstOrDefault().BookGenres.FirstOrDefault().Genre.GenreName</h2>
+        <br />
     <div class="container row" style="margin-left:2rem">
         @foreach (var book in Model)
         {

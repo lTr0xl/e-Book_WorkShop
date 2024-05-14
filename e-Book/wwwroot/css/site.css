@@ -19,3 +19,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.navbar-custom{
+    background-color:black;
+    color:white;
+}

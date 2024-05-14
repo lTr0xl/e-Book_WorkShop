@@ -7,26 +7,28 @@
     <link rel="stylesheet" href="~/css/authors.css" />
 }
 
-<form asp-controller="Authors" asp-action="Index" method="get">
-    <div class="row">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
-        <div class="col-2">
-    <div class="form-group">
-        <label asp-for="@Model.SearchByName">Search author: </label>
-        <input asp-for="@Model.SearchByName" placeholder="Search.." />
-    </div>
-    </div>
+<div class="col-5" style="margin-top:4rem;margin-bottom:-2.7rem;margin-left:10rem">
+    @* Serach By Title *@
+    <form asp-controller="Authors" asp-action="Index" method="get" style="width:20rem">
+        <div class="mainSearch">
+            <div class="input-group" style="width:20rem;margin-left:-8rem; margin-top:-2.1rem">
+                <input asp-for="@Model.SearchByName" type="text" class="form-control" placeholder="Search by title">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 
-    <div class="col-1" style="margin-left:-3.9rem; margin-top:1.2rem">
-        <button type="submit" class="btn btn-primary">Search</button>
-    </div>
-        <div class="col-1" style="margin-left:-3.1rem; margin-top:1.2rem">
-        <a asp-controller="Authors" asp-action="Index" class="btn btn-secondary">Clear</a>
-    </div>
-    </div>
-
-</form>
-<a asp-controller="Authors" asp-action="CreateAuthor" type="button" class="btn btn-primary" style = "margin-left:80rem; margin-bottom:-2.5rem">Create author</a>
+@if(User.Identity.IsAuthenticated && User.IsInRole("admin"))
+{
+    <a asp-controller="Authors" asp-action="CreateAuthor" type="button" class="btn btn-primary" style="margin-left:80rem; margin-bottom:-2.2rem">Create author</a>
+}
 <div class="main-wrapper" style="margin-top:-2rem">
     <div class="container main-container">
         @foreach(var author in Model.Authors)
@@ -53,12 +55,15 @@
                             }
                           <a asp-controller="Book" asp-action="SearchByAuthorId" asp-route-id="@author.Id" type="button" class="btn btn-link btn-block" style="margin-left: -1rem"><h6>Books(@numBooks)</h6></a>
                         </div>
-                        <div class="col-1">
-                            <a asp-controller="Authors" asp-action="EditAuthor" asp-route-id="@author.Id" type="button" class="btn btn-secondary btn-block" style="margin-left: 15.5rem">Edit</a>
-                        </div>
-                        <div class="col-1">
-                            <a asp-controller="Authors" asp-action="DeleteAuthor" asp-route-id="@author.Id" type="button" class="btn btn-danger btn-block" style="margin-left: 13.5rem">Delete</a>
-                        </div>
+                        @if(User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                        {
+                            <div class="col-1">
+                                <a asp-controller="Authors" asp-action="EditAuthor" asp-route-id="@author.Id" type="button" class="btn btn-secondary btn-block" style="margin-left: 15.5rem">Edit</a>
+                            </div>
+                            <div class="col-1">
+                                <a asp-controller="Authors" asp-action="DeleteAuthor" asp-route-id="@author.Id" type="button" class="btn btn-danger btn-block" style="margin-left: 13.5rem">Delete</a>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

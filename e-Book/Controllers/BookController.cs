@@ -19,19 +19,6 @@ namespace e_Book.Controllers
             _photoService = photoService;
         }
 
-        public async Task<IActionResult> Test()
-        {
-			IEnumerable<Author> authors = await _bookRepository.GetAllAuthors();
-			IEnumerable<Genre> genres = await _bookRepository.GetAllGenres();
-            IEnumerable<Book> books = await _bookRepository.GetAll();
-            BookViewModel viewModel = new BookViewModel()
-            {
-                Books = books,
-                Authors = authors,
-                Genres = genres,
-            };
-            return View(viewModel);
-        }
 
         [HttpGet]
         public async Task<IActionResult> Index(BookViewModel bookVM)
@@ -128,7 +115,7 @@ namespace e_Book.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> AddBook(AddBookViewModel addBookVM)
-        {
+                {
             if(!ModelState.IsValid)
             {
                 IEnumerable<Author> authors = await _bookRepository.GetAllAuthors();

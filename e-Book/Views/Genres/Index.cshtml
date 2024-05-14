@@ -8,8 +8,10 @@
 @section css {
     <link rel="stylesheet" href="~/css/genres.css" />
 }
-
-<a asp-controller="Genres" asp-action="CreateGenre" type="button" class="btn btn-primary" style="margin-left:71rem">Create genre</a>
+@if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+{
+    <a asp-controller="Genres" asp-action="CreateGenre" type="button" class="btn btn-primary" style="margin-left:71rem">Create genre</a>
+}
 
 <div class="modal-body d-flex justify-content-center">
     <ul class="list-group list-group-flush">
@@ -19,12 +21,15 @@
             <li class="list-group-item">
                 <div class="row">
                 <div class="col-10">
-                    <a asp-controller="Book" asp-action="SearchByGenreId" asp-route-id="@genre.Id" class="nav-link text-dark">
+                    <a style="width:auto;min-width:11rem" asp-controller="Book" asp-action="SearchByGenreId" asp-route-id="@genre.Id" class="nav-link text-dark">
                         <span style="font-weight:500">@genre.GenreName</span> <span> (@numBooks) </span>
                     </a>
                 </div>
                 <div class="col-2">
-                <a asp-controller="Genres" asp-action="DeleteGenre" asp-route-id="@genre.Id" type="button" class="btn-close" aria-label="Close" style="font-size:13px;margin-top:0.9rem "></a>
+                        @if(User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                        {
+                            <a asp-controller="Genres" asp-action="DeleteGenre" asp-route-id="@genre.Id" type="button" class="btn-close" aria-label="Close" style="font-size:13px;margin-top:0.9rem "></a>
+                        }
                 </div>
                 </div>
             </li>
