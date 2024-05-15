@@ -1,5 +1,7 @@
 ﻿using e_Book.Interfaces;
 using e_Book.Models;
+using e_Book.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace e_Book.Controllers
@@ -7,30 +9,42 @@ namespace e_Book.Controllers
     public class ReviewController : Controller
     {
         private readonly IReviewRepository _reviewRepository;
+        private readonly IUserBooksRepository _userBooksRepository;
 
-        public ReviewController(IReviewRepository reviewRepository)
+        public ReviewController(IReviewRepository reviewRepository, IUserBooksRepository userBooksRepository)
         {
             _reviewRepository = reviewRepository;
+            _userBooksRepository = userBooksRepository;
         }
         public IActionResult CreateReview(int id)
         {
-            return View();
+            Review review = new Review()
+            {
+                AppUser = _userBooksRepository.GetCurrentUserId(),
+            };
+            CreateReviewViewModel reviewVM = new CreateReviewViewModel()
+            {
+                Review = review,
+                Username = _userBooksRepository.GetCurrentUserUsername(),
+
+            };
+            return View(reviewVM);
         }
 
         [HttpPost]
-        public IActionResult CreateReview(int id, Review review)
+        public IActionResult CreateReview(int id, CreateReviewViewModel reviewVM)
         {
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "Failed to create review");
-                return View(review);
+                return View(reviewVM);
             }
             var newReview = new Review
             {
                 BookId = id,
-                AppUser = review.AppUser,
-                Comment = review.Comment,
-                Rating = review.Rating,
+                AppUser = reviewVM.Review.AppUser,
+                Comment = reviewVM.Review.Comment,
+                Rating = reviewVM.Review.Rating,
             };
             _reviewRepository.Add(newReview);
             return Redirect("/Book/Details/" + id);

@@ -1,4 +1,5 @@
 ﻿using e_Book.Data;
+using e_Book.Interfaces;
 using e_Book.Models;
 using e_Book.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +12,7 @@ namespace e_Book.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ApplicationDbContext _context;
+        
         public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ApplicationDbContext context)
         {
             _context = context;
@@ -84,7 +86,6 @@ namespace e_Book.Controllers
             }
             return RedirectToAction("Index", "Book");
         }
-        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

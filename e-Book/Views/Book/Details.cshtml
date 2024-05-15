@@ -1,6 +1,7 @@
-﻿@model Book
+﻿@using e_Book.ViewModels
+@model DetailsViewModel
 @{
-    ViewData["Title"] = Model.Title;
+    ViewData["Title"] = Model.Book.Title;
 }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
@@ -17,35 +18,35 @@
 
     <!-- Portfolio Item Heading -->
     <h1 class="my-4">
-        @Model.Title
+        @Model.Book.Title
     </h1>
 
     <!-- Portfolio Item Row -->
     <div class="row">
 
         <div class="col-sm">
-            <img class="rounded border border-dark float-left" width="350px" height="450px" src="@Model.FrontPage" alt="">
+            <img class="rounded border border-dark float-left" width="350px" height="450px" src="@Model.Book.FrontPage" alt="">
         </div>
 
         <div class="col-sm" style="width:20rem">
             <h3 class="my-3">Book Description</h3>
-            @if(Model.Description == null)
+            @if(Model.Book.Description == null)
             {
                 <h5>No description!</h5>
             }
-            <p>@Model.Description</p>
+            <p>@Model.Book.Description</p>
             <h3 class="my-3">Book Details</h3>
             <ul>
-                <li><b>Year published: </b>@Model.YearPublished</li>
-                <li><b>Num pages: </b>@Model.NumPages</li>
-                <li><b>Publisher: </b>@Model.Publisher</li>
-                <li><b>Author: </b>@Model.Author.FirstName @Model.Author.LastName</li>
+                <li><b>Year published: </b>@Model.Book.YearPublished</li>
+                <li><b>Num pages: </b>@Model.Book.NumPages</li>
+                <li><b>Publisher: </b>@Model.Book.Publisher</li>
+                <li><b>Author: </b>@Model.Book.Author.FirstName @Model.Book.Author.LastName</li>
                 <li><b>Genres: </b>
                     @{
-                        var numGenres = Model.BookGenres.Count();
+                        var numGenres = Model.Book.BookGenres.Count();
                         var genresNum = 0;
                     }
-                    @foreach (var bg in Model.BookGenres)
+                    @foreach (var bg in Model.Book.BookGenres)
                     {
                         genresNum++;
                         if (genresNum != numGenres)
@@ -62,7 +63,7 @@
                     int suma = 0;
                     int br = 0;
                     var rating = "/";
-                    @foreach (var r in Model.Reviews)
+                    @foreach (var r in Model.Book.Reviews)
                     {
                         suma += r.Rating.GetValueOrDefault();
                         br++;
@@ -75,17 +76,17 @@
                 <li><b>Rating: </b>@rating</li>
             </ul>
             <br />
-            @if (Model.DownloadUrl != null)
+            @if (User.Identity.IsAuthenticated && Model.HasBook)
             {
                 <h4>Download link: </h4>
-                <span>@Model.DownloadUrl</span>
+                <span>@Model.Book.DownloadUrl</span>
             }
         </div>
         <div class="col-sm" >
             @if(User.Identity.IsAuthenticated && User.IsInRole("admin"))
             {
-                <a asp-controller="Book" asp-action="EditBook" asp-route-id="@Model.Id" type="button" class="btn btn-secondary" style="margin-left:12rem;margin-top:-5rem">Edit Book</a>
-                <a asp-controller="Book" asp-action="DeleteBook" asp-route-id="@Model.Id" type="button" class="btn btn-danger" style="margin-left:18rem;margin-top:-8rem">Delete Book</a>
+                <a asp-controller="Book" asp-action="EditBook" asp-route-id="@Model.Book.Id" type="button" class="btn btn-secondary" style="margin-left:12rem;margin-top:-5rem">Edit Book</a>
+                <a asp-controller="Book" asp-action="DeleteBook" asp-route-id="@Model.Book.Id" type="button" class="btn btn-danger" style="margin-left:18rem;margin-top:-8rem">Delete Book</a>
             }
         </div>
     </div>
@@ -97,14 +98,17 @@
     <div class="main-container">
         <div>
             <h1 class="text-center">Reviews</h1>
-            <a asp-controller="Review" asp-action="CreateReview" asp-route-id="@Model.Id" type="button" class="btn btn-primary position-absolute" style="margin-left:70rem; margin-top:-2.5rem">Create Review</a>
+            @if (User.Identity.IsAuthenticated && (Model.HasBook || User.IsInRole("admin")))
+            {
+                <a asp-controller="Review" asp-action="CreateReview" asp-route-id="@Model.Book.Id" type="button" class="btn btn-primary position-absolute" style="margin-left:70rem; margin-top:-2.5rem">Create Review</a>
+            }
         </div>
         <hr />
         <div class="cards">
-            @foreach (var review in Model.Reviews)
+            @foreach (var review in Model.Book.Reviews)
             {
             <div class="card">
-                    <h4>@review.AppUser</h4>
+                    <h4>@review.AppUserInfo.UserName</h4>
                     <div>
                         <ul>
                             @for (var i = 0; i < review.Rating; i++)
@@ -115,11 +119,17 @@
                     </div>
                     
                 <p class="close"><i class="fa-solid fa-xmark"></i></p>
-                <p class="desc">@review.Comment</p>
-                <p class="read-more">
-                    <a asp-controller="Review" asp-action="EditReview" asp-route-id="@review.Id" type="button" class="btn btn-dark">Edit</a>
-                    <a asp-controller="Review" asp-action="DeleteReview" asp-route-id="@review.Id" type="button" class="btn btn-danger">Delete</a>
-                </p>
+                    <p class="desc">@review.Comment</p>
+                    <p class="read-more">
+                        @if (User.Identity.IsAuthenticated && User.GetUserId() == review.AppUser)
+                        {
+                            <a asp-controller="Review" asp-action="EditReview" asp-route-id="@review.Id" type="button" class="btn btn-dark">Edit</a>
+                        }
+                        @if (User.Identity.IsAuthenticated && (User.GetUserId() == review.AppUser || User.IsInRole("admin")))
+                        {
+                            <a asp-controller="Review" asp-action="DeleteReview" asp-route-id="@review.Id" type="button" class="btn btn-danger">Delete</a>
+                        }
+                    </p>
             </div>
             }
         </div>

@@ -11,12 +11,14 @@ namespace e_Book.Controllers
         private readonly IBookRepository _bookRepository;
         private readonly IBookGenreRepository _bookGenreRepository;
         private readonly IPhotoService _photoService;
+        private readonly IUserBooksRepository _userBooksRepository;
 
-        public BookController(IBookRepository bookRepository , IBookGenreRepository bookGenreRepository , IPhotoService photoService)
+        public BookController(IBookRepository bookRepository , IBookGenreRepository bookGenreRepository , IPhotoService photoService, IUserBooksRepository userBooksRepository)
         {
             _bookRepository = bookRepository;
             _bookGenreRepository = bookGenreRepository;
             _photoService = photoService;
+            _userBooksRepository = userBooksRepository;
         }
 
 
@@ -95,11 +97,17 @@ namespace e_Book.Controllers
         public async Task<IActionResult> Details(int id)
         {
             Book book = await _bookRepository.GetByIdAsync(id);
+            bool hasBook = _userBooksRepository.HasBook(id);
             if (book == null)
             {
                 return View("Error");
             }
-            return View(book);
+            DetailsViewModel detailsVM = new DetailsViewModel()
+            {
+                Book = book,
+                HasBook = hasBook,
+            };
+            return View(detailsVM);
         }
         
         public async Task<IActionResult> AddBook()

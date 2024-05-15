@@ -141,39 +141,48 @@
                             <br />
                             <p>Year Published: @book.YearPublished</p>
 
+                            @{
+                                int suma = 0;
+                                int br = 0;
+                                int rating = 0;
+                                @foreach (var r in book.Reviews)
+                                {
+                                    suma += r.Rating.GetValueOrDefault();
+                                    br++;
+                                }
+                                if (br != 0) rating = (suma / br);
+                            }
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="rating">
+                                    @for (int ii = 5; ii > 0; ii--)
+                                    {
+                                        if (ii > rating)
+                                        {
+                                            <label><i class="fa fa-star"></i></label>
+                                        }
+                                        else
+                                        {
+                                            <label><i class="fa fa-star text-primary"></i></label>
+                                        }
+                                    }
+                                </div>
+                            </div>
+
                         </div>
                         <span class="tag1"></span>
                         <div class="product-info smart-form" style="margin-top:2rem">
-                            <div class="row">
-                                <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="row" style="margin-top:-.5rem">
+                                <div class="col-md-5 col-sm-5 col-xs-3">
                                     <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id" class="btn btn-success">View details</a>
                                 </div>
-                                @{
-                                    int suma = 0;
-                                    int br = 0;
-                                    int rating = 0;
-                                    @foreach (var r in book.Reviews)
-                                    {
-                                        suma += r.Rating.GetValueOrDefault();
-                                        br++;
-                                    }
-                                    if (br != 0) rating = (suma / br);
-                                }
-                                <div class="col-md-6 col-sm-6 col-xs-6">
-                                    <div class="rating">
-                                        @for (int ii = 5; ii > 0; ii--)
-                                        {
-                                            if (ii > rating)
-                                            {
-                                                <label><i class="fa fa-star"></i></label>
-                                            }
-                                            else
-                                            {
-                                                <label><i class="fa fa-star text-primary"></i></label>
-                                            }
-                                        }
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <div class="col-md-6 col-sm-3 col-xs-3" style="margin-left:-1rem">
+                                        <a asp-controller="UserBooks" asp-action="BuyBook" asp-route-id="@book.Id" class="btn btn-success">Buy now</a>
                                     </div>
-                                </div>
+                                }
+                                
+                               
                             </div>
                         </div>
                     </div>

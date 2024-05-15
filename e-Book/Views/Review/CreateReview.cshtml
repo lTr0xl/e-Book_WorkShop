@@ -1,26 +1,25 @@
-﻿@model Review
+﻿@using e_Book.ViewModels
+@model CreateReviewViewModel
 
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
 }
 <h3>Create Review</h3>
 
 <form method="post" asp-action="CreateReview">
+    <input asp-for="Review.AppUser" class="form-control" hidden>
+    <input asp-for="Username" class="form-control" hidden>
     <div class="form-group">
-        <label asp-for="AppUser">Username</label>
-        <input asp-for="AppUser" class="form-control" placeholder="Username">
-        <span asp-validation-for="AppUser" class="text-danger"></span>
+        <label asp-for="Username">Username</label>
+        <input asp-for="Username" class="form-control" disabled>
     </div>
     <div class="form-group">
-        <label asp-for="Comment"></label>
-        <textarea asp-for="Comment" class="form-control" placeholder="Comment.."></textarea>
-        <span asp-validation-for="Comment" class="text-danger"></span>
+        <label asp-for="Review.Comment"></label>
+        <textarea asp-for="Review.Comment" class="form-control" placeholder="Comment.."></textarea>
+        <span asp-validation-for="Review.Comment" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Rating"></label>
-        <select asp-for="Rating" class="form-control" placeholder="Rating">
+        <label asp-for="Review.Rating"></label>
+        <select asp-for="Review.Rating" class="form-control" placeholder="Rating">
             <option selected="selected">--Select--</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -28,7 +27,7 @@
             <option value="4">4</option>
             <option value="5">5</option>
         </select>
-        <span asp-validation-for="Rating" class="text-danger"></span>
+        <span asp-validation-for="Review.Rating" class="text-danger"></span>
     </div>
     <br />
     <button type="submit" class="btn btn-primary">Submit</button>
