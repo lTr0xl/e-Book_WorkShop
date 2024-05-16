@@ -175,7 +175,21 @@
                                 <div class="col-md-5 col-sm-5 col-xs-3">
                                     <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id" class="btn btn-success">View details</a>
                                 </div>
-                                @if (User.Identity.IsAuthenticated)
+                                @{
+                                    var hasbook = false;
+
+                                    if (User.Identity.IsAuthenticated)
+                                    {
+                                        foreach (var b in book.UserBooks)
+                                        {
+                                            if (b.AppUserId == User.GetUserId() && b.BookId == book.Id)
+                                            {
+                                                hasbook = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                @if (User.Identity.IsAuthenticated && !hasbook)
                                 {
                                     <div class="col-md-6 col-sm-3 col-xs-3" style="margin-left:-1rem">
                                         <a asp-controller="UserBooks" asp-action="BuyBook" asp-route-id="@book.Id" class="btn btn-success">Buy now</a>

@@ -2,6 +2,7 @@
 using e_Book.Models;
 using e_Book.Repository;
 using e_Book.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace e_Book.Controllers
@@ -12,13 +13,16 @@ namespace e_Book.Controllers
         private readonly IBookGenreRepository _bookGenreRepository;
         private readonly IPhotoService _photoService;
         private readonly IUserBooksRepository _userBooksRepository;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public BookController(IBookRepository bookRepository , IBookGenreRepository bookGenreRepository , IPhotoService photoService, IUserBooksRepository userBooksRepository)
+        public BookController(IBookRepository bookRepository , IBookGenreRepository bookGenreRepository ,
+            IPhotoService photoService, IUserBooksRepository userBooksRepository, IWebHostEnvironment webHostEnvironment)
         {
             _bookRepository = bookRepository;
             _bookGenreRepository = bookGenreRepository;
             _photoService = photoService;
             _userBooksRepository = userBooksRepository;
+            _webHostEnvironment = webHostEnvironment;
         }
 
 
@@ -137,7 +141,8 @@ namespace e_Book.Controllers
             var resultFront = await _photoService.AddPhotoAsync(addBookVM.FrontPage);
             if(addBookVM.DownloadPdf != null)
             {
-                string folder = "books/cover/";
+                string folder = "Bookspdf/";
+                addBookVM.DownlaodUrl = await UploadImage(folder, addBookVM.DownloadPdf);
             }
 
             var newBook = new Book()
@@ -149,7 +154,7 @@ namespace e_Book.Controllers
                 Publisher=addBookVM.Publisher,
                 FrontPage=resultFront.Url.ToString(),
                 AuthorId=addBookVM.AuthorId,
-                DownloadUrl = resultDownload,
+                DownloadUrl = addBookVM.DownlaodUrl,
             };
             _bookRepository.Add(newBook);
 
@@ -164,7 +169,16 @@ namespace e_Book.Controllers
                 _bookGenreRepository.Add(bookGenre);
             }
             return RedirectToAction("Index");
-        }   
+        }
+
+        private async Task<string?> UploadImage(string folderPath, IFormFile file)
+        {
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+            string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folderPath);
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+            return "/" + folderPath;
+        }
+
         public async Task<IActionResult> DeleteBook(int id)
         {
             Book book = await _bookRepository.GetByIdAsync(id);

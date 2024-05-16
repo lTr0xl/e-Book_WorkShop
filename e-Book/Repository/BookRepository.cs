@@ -31,7 +31,7 @@ namespace e_Book.Repository
 
         public async Task<IEnumerable<Book>> GetAll()
         {
-            return await _context.Books.Include(a => a.Author).Include(r => r.Reviews).ThenInclude(a => a.AppUserInfo).Include(bg => bg.BookGenres).ThenInclude(g => g.Genre).ToListAsync();
+            return await _context.Books.Include(a => a.Author).Include(r => r.Reviews).ThenInclude(a => a.AppUserInfo).Include(bg => bg.BookGenres).ThenInclude(g => g.Genre).Include(ub => ub.UserBooks).ToListAsync();
         }
 
         public async Task<IEnumerable<Author>> GetAllAuthors()
@@ -45,7 +45,7 @@ namespace e_Book.Repository
 
         public async Task<IEnumerable<Book>> GetBooksByAuthorId(int id)
         {
-            return await _context.Books.Include(a => a.Author).Include(r => r.Reviews).Include(bg => bg.BookGenres).ThenInclude(g => g.Genre).Where(a => a.AuthorId.Equals(id)).ToListAsync();
+            return await _context.Books.Include(a => a.Author).Include(r => r.Reviews).Include(bg => bg.BookGenres).ThenInclude(g => g.Genre).Include(ub => ub.UserBooks).Where(a => a.AuthorId.Equals(id)).ToListAsync();
         }
 
         public async Task<IEnumerable<Book>> GetBooksByGenreId(int id)
@@ -67,12 +67,12 @@ namespace e_Book.Repository
 
         public async Task<Book> GetByIdAsync(int id)
         {
-            return await _context.Books.Include(a => a.Author).Include(r => r.Reviews).ThenInclude(a => a.AppUserInfo).Include(bg => bg.BookGenres).ThenInclude(g => g.Genre).FirstOrDefaultAsync(i => i.Id == id);
+            return await _context.Books.Include(a => a.Author).Include(r => r.Reviews).ThenInclude(a => a.AppUserInfo).Include(bg => bg.BookGenres).ThenInclude(g => g.Genre).Include(ub => ub.UserBooks).FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task<Book> GetByIdAsyncNoTracking(int id)
         {
-            return await _context.Books.Include(a => a.Author).Include(r => r.Reviews).ThenInclude(a => a.AppUserInfo).Include(bg => bg.BookGenres).ThenInclude(g => g.Genre).AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+            return await _context.Books.Include(a => a.Author).Include(r => r.Reviews).ThenInclude(a => a.AppUserInfo).Include(bg => bg.BookGenres).ThenInclude(g => g.Genre).Include(ub => ub.UserBooks).AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task<Book> GetLastBook()

@@ -79,7 +79,7 @@
             @if (User.Identity.IsAuthenticated && Model.HasBook)
             {
                 <h4>Download link: </h4>
-                <span>@Model.Book.DownloadUrl</span>
+                <a class="btn btn-outline-primary" href="@Model.Book.DownloadUrl" target="_blank">Download now</a>
             }
         </div>
         <div class="col-sm" >
