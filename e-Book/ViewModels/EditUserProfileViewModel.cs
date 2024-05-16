@@ -1,10 +1,23 @@
-﻿namespace e_Book.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace e_Book.ViewModels
 {
     public class EditUserProfileViewModel
     {
         public string Id { get; set; }
+        [Display(Name = "Username")]
+        [Required(ErrorMessage = "Username is required")]
         public string Username { get; set; }
-        public string Password { get; set; }
-
+        [Required]
+        [Display(Name = "Current password")]
+        [DataType(DataType.Password)]
+        public string CurrentPassword { get; set; }
+        [Display(Name = "New password")]
+        [DataType(DataType.Password)]
+        public string? NewPassword { get; set; }
+        [Display(Name = "Confirm password")]
+        [DataType(DataType.Password)]
+        [Compare("NewPassword", ErrorMessage = "Passwords do not match")]
+        public string? ConfirmPassword { get; set; }
     }
 }

@@ -38,7 +38,7 @@
                                     @if (User.Identity.IsAuthenticated)
                                     {
                                         <a class="dropdown-item" asp-area="" asp-controller="UserBooks" asp-action="Index">My books</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="UserBooks" asp-action="EditUserProfile">Edit profile</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="EditUserProfile">Edit profile</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
                                     }
                                     else

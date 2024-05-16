@@ -123,7 +123,7 @@ namespace e_Book.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> AddBook(AddBookViewModel addBookVM)
-                {
+        {
             if(!ModelState.IsValid)
             {
                 IEnumerable<Author> authors = await _bookRepository.GetAllAuthors();
@@ -134,7 +134,11 @@ namespace e_Book.Controllers
                 return View(addBookVM);
             }
 
-            var result = await _photoService.AddPhotoAsync(addBookVM.FrontPage);
+            var resultFront = await _photoService.AddPhotoAsync(addBookVM.FrontPage);
+            if(addBookVM.DownloadPdf != null)
+            {
+                string folder = "books/cover/";
+            }
 
             var newBook = new Book()
             {
@@ -143,9 +147,9 @@ namespace e_Book.Controllers
                 NumPages=addBookVM.NumPages,
                 Description=addBookVM.Description,
                 Publisher=addBookVM.Publisher,
-                FrontPage=result.Url.ToString(),
+                FrontPage=resultFront.Url.ToString(),
                 AuthorId=addBookVM.AuthorId,
-                DownloadUrl = addBookVM.DownloadUrl,
+                DownloadUrl = resultDownload,
             };
             _bookRepository.Add(newBook);
 

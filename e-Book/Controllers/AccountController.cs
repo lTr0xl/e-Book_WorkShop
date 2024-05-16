@@ -1,6 +1,7 @@
 ﻿using e_Book.Data;
 using e_Book.Interfaces;
 using e_Book.Models;
+using e_Book.Repository;
 using e_Book.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +13,21 @@ namespace e_Book.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ApplicationDbContext _context;
-        
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ApplicationDbContext context)
+        private readonly IAccountRepository _accountRepository;
+
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ApplicationDbContext context,
+            IAccountRepository accountRepository)
         {
             _context = context;
+            _accountRepository = accountRepository;
             _userManager = userManager;
             _signInManager = signInManager;
+        }
+        private void MapUserEdit(AppUser user, EditUserProfileViewModel editVM)
+        {
+            user.Id = editVM.Id;
+            user.UserName = editVM.Username;
+
         }
         public IActionResult Login()
         {
@@ -90,6 +100,52 @@ namespace e_Book.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index","Book");
+        }
+
+        public async Task<IActionResult> EditUserProfile()
+        {
+            var curUserId = _accountRepository.GetCurrentUserId();
+            var user = await _accountRepository.GetUserById(curUserId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+            var editUserProfileVM = new EditUserProfileViewModel()
+            {
+                Id = curUserId,
+                Username = user.UserName,
+            };
+            return View(editUserProfileVM);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditUserProfile(EditUserProfileViewModel editVM)
+        {
+            if(!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Failed to edit profile");
+                return View("EditUserProfile",editVM);
+            }
+
+            AppUser user = await _accountRepository.GetUserByIdNoTracking(editVM.Id);
+            if(!await _userManager.CheckPasswordAsync(user, editVM.CurrentPassword))
+            {
+                TempData["Error"] = "Wrong password";
+                return RedirectToAction("EditUserProfile", editVM);
+            }
+
+            if(editVM.NewPassword != null)
+            {
+                var newPass = await _userManager.ChangePasswordAsync(user, editVM.CurrentPassword, editVM.NewPassword);
+                if (!newPass.Succeeded)
+                {
+                    TempData["Error"] = "Failed changing password";
+                    return RedirectToAction("EditUserProfile", editVM);
+                }
+            }
+            
+            MapUserEdit(user, editVM);
+            _accountRepository.Update(user);
+            return RedirectToAction("Index", "Book");
         }
     }
 }
