@@ -27,7 +27,6 @@ namespace e_Book.Controllers
         {
             user.Id = editVM.Id;
             user.UserName = editVM.Username;
-
         }
         public IActionResult Login()
         {

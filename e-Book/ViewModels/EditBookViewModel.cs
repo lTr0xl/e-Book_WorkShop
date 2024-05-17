@@ -14,6 +14,7 @@ namespace e_Book.ViewModels
         public string? Publisher { get; set; }
         public IFormFile? FrontPage { get; set; }
         public string? FrontPageURL { get; set; }
+        public IFormFile DownloadPdf { get; set; }
         public string? DownloadUrl { get; set; }
         public IEnumerable<Author>? Authors { get; set; }
         public int AuthorId { get; set; }

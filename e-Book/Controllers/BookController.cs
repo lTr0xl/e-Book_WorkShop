@@ -2,6 +2,7 @@
 using e_Book.Models;
 using e_Book.Repository;
 using e_Book.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
@@ -101,7 +102,11 @@ namespace e_Book.Controllers
         public async Task<IActionResult> Details(int id)
         {
             Book book = await _bookRepository.GetByIdAsync(id);
-            bool hasBook = _userBooksRepository.HasBook(id);
+            bool hasBook = false;
+            if (User.Identity.IsAuthenticated)
+            {
+                hasBook = _userBooksRepository.HasBook(id);
+            }
             if (book == null)
             {
                 return View("Error");
@@ -113,7 +118,9 @@ namespace e_Book.Controllers
             };
             return View(detailsVM);
         }
-        
+
+
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> AddBook()
         {
             IEnumerable<Author> authors = await _bookRepository.GetAllAuthors();
@@ -126,6 +133,7 @@ namespace e_Book.Controllers
             return View(bVM);
         }
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> AddBook(AddBookViewModel addBookVM)
         {
             if(!ModelState.IsValid)
@@ -179,6 +187,7 @@ namespace e_Book.Controllers
             return "/" + folderPath;
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteBook(int id)
         {
             Book book = await _bookRepository.GetByIdAsync(id);
@@ -188,6 +197,8 @@ namespace e_Book.Controllers
             }
             return View(book);
         }
+
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteBookConfirmed(int id)
         {
             Book book = await _bookRepository.GetByIdAsync(id);
@@ -198,6 +209,7 @@ namespace e_Book.Controllers
             _bookRepository.Delete(book);
             return RedirectToAction("Index");
         }
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> EditBook(int id)
         {
             Book book = await _bookRepository.GetByIdAsyncNoTracking(id);
@@ -230,6 +242,7 @@ namespace e_Book.Controllers
             return View(bookVM);
         }
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> EditBook(int id,EditBookViewModel bookVM)
         {
             if (!ModelState.IsValid)
@@ -269,7 +282,11 @@ namespace e_Book.Controllers
                 {
                     photoResult = book.FrontPage;
                 }
-
+                if (bookVM.DownloadPdf != null)
+                {
+                    string folder = "Bookspdf/";
+                    bookVM.DownloadUrl = await UploadImage(folder, bookVM.DownloadPdf);
+                }
                 Book newBook = new Book()
                 {
                     Id = bookVM.Id,
